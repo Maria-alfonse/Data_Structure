@@ -51,71 +51,21 @@ public:
     bool empty(){
         return size()==0;
     }
-};
-class minHeap:public Heap{
 
-    void heapifyDown_price(int i){
-        int left=2*i+1;
-        int right= 2*i+2;
-        int smallest=i;
-
-        if(left<size()&& heap[left].price<heap[i].price){
-            smallest=left;
-        }
-
-        if(right<size()&& heap[right].price<heap[smallest].price){
-            smallest=right;
-        }
-        if(smallest!=i){
-            swap(heap[i],heap[smallest]);
-            heapifyDown_price(smallest);
-        }
+    virtual void heapifyDown_price(int i)=0;
+    virtual void heapifyDown_name(int i)=0;
+    virtual void heapifyUp_price(int i)=0;
+    virtual void heapifyUp_name(int i)=0;
+    void insertPrice(Item item){
+        heap.push_back(item);
+        int index=size()-1;
+        heapifyUp_price(index);
     }
-
-    void heapifyDown_name(int i){
-        int left=2*i+1;
-        int right= 2*i+2;
-        int smallest=i;
-
-        if(left<size()&& heap[left].itemname<heap[i].itemname){
-            smallest=left;
-        }
-
-        if(right<size()&& heap[right].itemname<heap[smallest].itemname){
-            smallest=right;
-        }
-        if(smallest!=i){
-            swap(heap[i],heap[smallest]);
-            heapifyDown_name(smallest);
-        }
-    }
-
-    void heapifyUp_price(int i){
-        if(i && heap[(i-1)/2].price>heap[i].price){
-            swap(heap[i],heap[(i-1)/2]);
-            heapifyUp_price((i-1)/2);
-        }
-    }
-
-    void heapifyUp_name(int i){
-        if( heap[(i-1)/2]>heap[i]){
-            swap(heap[i],heap[(i-1)/2]);
-            heapifyUp_name((i-1)/2);
-        }
-    }
-
-public:
-    void insert_name(Item item){
+    void insertName(Item item){
         heap.push_back(item);
         int index=size()-1;
         heapifyUp_name(index);
     }
-    void insert_price(Item item){
-        heap.push_back(item);
-        int index=size()-1;
-        heapifyUp_price(index);
-    };
-
     void pop_name(){
         if(size()==0)
             cout<<"Empty heap";
@@ -134,6 +84,168 @@ public:
             heapifyDown_price(0);
         }
     }
+    void heapifyMinPrice(vector<Item>& arr, int size, int index) {
+        int smallest = index;
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
+
+        if (left < size && arr[left].price > arr[smallest].price)
+            smallest = left;
+
+        if (right < size && arr[right].price > arr[smallest].price)
+            smallest = right;
+
+        if (smallest != index) {
+            swap(arr[index], arr[smallest]);
+            heapifyMinPrice(arr, size, smallest);
+        }
+    }
+    void heapifyMinName(vector<Item>& arr, int size, int index) {
+        int smallest = index;
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
+
+        if (left < size && arr[left].itemname > arr[smallest].itemname)
+            smallest = left;
+
+        if (right < size && arr[right].itemname > arr[smallest].itemname)
+            smallest = right;
+
+        if (smallest != index) {
+            swap(arr[index], arr[smallest]);
+            heapifyMinPrice(arr, size, smallest);
+        }
+    }
+    void heapifyMaxPrice(vector<Item>& arr, int size, int index) {
+        int largest = index;
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
+
+        if (left < size && arr[left].price < arr[largest].price)
+            largest = left;
+
+        if (right < size && arr[right].price < arr[largest].price)
+            largest = right;
+
+        if (largest != index) {
+            swap(arr[index], arr[largest]);
+            heapifyMaxPrice(arr, size, largest);
+        }
+    }
+    void heapifyMaxName(vector<Item>& arr, int size, int index) {
+        int largest = index;
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
+
+        if (left < size && arr[left].itemname < arr[largest].itemname)
+            largest = left;
+
+        if (right < size && arr[right].itemname < arr[largest].itemname)
+            largest = right;
+
+        if (largest != index) {
+            swap(arr[index], arr[largest]);
+            heapifyMaxPrice(arr, size, largest);
+        }
+    }
+
+// Function to heap sort items by price in descending order
+    void heapSortMaxPrice() {
+        int n = heap.size();
+
+        for (int i = n / 2 - 1; i >= 0; i--)
+            heapifyMaxPrice(heap, n, i);
+        for (int i = n - 1; i > 0; i--) {
+            swap(heap[0], heap[i]);
+            heapifyMaxPrice(heap, i, 0);
+        }
+    }
+    void heapSortMaxName() {
+        int n = heap.size();
+
+        for (int i = n / 2 - 1; i >= 0; i--)
+            heapifyMaxName(heap, n, i);
+        for (int i = n - 1; i > 0; i--) {
+            swap(heap[0], heap[i]);
+            heapifyMaxName(heap, i, 0);
+        }
+    }
+    void heapSortMinPrice() {
+        int n = heap.size();
+
+        for (int i = n / 2 - 1; i >= 0; i--)
+            heapifyMinPrice(heap, n, i);
+        for (int i = n - 1; i > 0; i--) {
+            swap(heap[0], heap[i]);
+            heapifyMinPrice(heap, i, 0);
+        }
+    }
+    void heapSortMinName() {
+        int n = heap.size();
+
+        for (int i = n / 2 - 1; i >= 0; i--)
+            heapifyMinName(heap, n, i);
+        for (int i = n - 1; i > 0; i--) {
+            swap(heap[0], heap[i]);
+            heapifyMinName(heap, i, 0);
+        }
+    }
+};
+class minHeap:public Heap{
+
+    void heapifyDown_price(int i){
+        heapifyMaxPrice(heap,heap.size(),i);
+    }
+
+    void heapifyDown_name(int i){
+        heapifyMaxName(heap,heap.size(),i);
+    }
+
+    void heapifyUp_price(int i){
+        if(i && heap[(i-1)/2].price>heap[i].price){
+            swap(heap[i],heap[(i-1)/2]);
+            heapifyUp_price((i-1)/2);
+        }
+    }
+
+    void heapifyUp_name(int i){
+        if( heap[(i-1)/2]>heap[i]){
+            swap(heap[i],heap[(i-1)/2]);
+            heapifyUp_name((i-1)/2);
+        }
+    }
+
+
+};
+class maxHeap:public Heap{
+    void heapifyUp_price(int i) override{
+        int parent = (i-1)/2;
+        if(parent>=0){
+            if(heap[i].price > heap[parent].price){
+                swap(heap[i],heap[parent]);
+                heapifyUp_price(parent);
+            }
+        }
+    }
+    void heapifyUp_name(int i){
+        int parent = (i-1)/2 ;
+        if(parent>=0){
+            if(heap[i].itemname >heap[parent].itemname){
+                swap(heap[i],heap[parent]);
+                heapifyUp_name(parent);
+            }
+        }
+    }
+    void heapifyDown_price(int i) override{
+        heapifyMinPrice(heap,heap.size(),i);
+
+    }
+    void heapifyDown_name(int i) override{
+        heapifyMinName(heap,heap.size(),i);
+    }
+
+
+
 };
 void readItems(istream& input, vector<Item>& items) {
     string name, category, priceStr;
@@ -158,35 +270,47 @@ void print_heap(vector<Item>& heap){
 
 int main() {
     vector<Item>heap;
-    ifstream input("D:\\untitled\\items.txt"); // Open the file
+    ifstream input("items.txt"); // Open the file
     if (!input.is_open()) {
         cout << "Failed to open the file." << endl;
         return 1;
     }
-//    cout<<"1-Binary Search Tree (BST)"<<endl;
-//    cout<<"2-Heaps"<<endl;
-//    cout<<"3-AVL Trees"<<endl;
-//    cout<<"Please choose the number of the tree data structure you want: "<<endl;
-//    int ans;
-//    cin>>ans;
+
     readItems(input,heap);
-    minHeap heap1,heap2;
-
-    //min heap by name
-    for(int i=0;i<heap.size();i++){
-        heap1.insert_name(heap[i]);
+    minHeap minHeapName,minHeapPrice;
+    for(auto i:heap){
+        minHeapName.insertName(i);
     }
-//    heap1.print_heap();
-
-    //min heap by price
-    for(int i=0;i<heap.size();i++){
-        heap2.insert_price(heap[i]);
+//    minHeapName.heapSortMaxName();
+//    minHeapName.print_heap();
+//    cout<<"------------------------------------------------------------";
+//    minHeapName.heapSortMinName();
+//    minHeapName.print_heap();
+//    cout<<"------------------------------------------------------------";
+    for(auto i:heap){
+        minHeapPrice.insertPrice(i);
     }
-    heap2.print_heap();
-
-
+    minHeapPrice.print_heap();
+    cout<<"------------------------------------------------------------"<<endl;
+    minHeapPrice.heapSortMaxPrice();
+    minHeapPrice.print_heap();
+    cout<<"------------------------------------------------------------"<<endl;
+    minHeapPrice.heapSortMinPrice();
+    minHeapPrice.print_heap();
+    cout<<"------------------------------------------------------------"<<endl;
+    maxHeap maxHeapName,maxHeapPrice;
+    for(auto i:heap){
+        maxHeapPrice.insertPrice(i);
+    }
+    maxHeapPrice.print_heap();
+    cout<<"------------------------------------------------------------"<<endl;
+    maxHeapPrice.heapSortMaxPrice();
+    maxHeapPrice.print_heap();
+    cout<<"------------------------------------------------------------"<<endl;
+    maxHeapPrice.heapSortMinPrice();
+    maxHeapPrice.print_heap();
+    cout<<"------------------------------------------------------------"<<endl;
     return 0;
 }
-
 
 
