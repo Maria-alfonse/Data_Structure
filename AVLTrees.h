@@ -225,9 +225,16 @@ public:
     void AscendingPrice() {
         vector<T> items;
         collectItemsinorder(root, items);
-        sort(items.begin(), items.end(), [](const T& a, const T& b) {
-            return a.getPrice() < b.getPrice();
-        });
+        int n = items.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (items[j].getPrice() > items[j + 1].getPrice()) {
+                    T temp = items[j];
+                    items[j] = items[j + 1];
+                    items[j + 1] = temp;
+                }
+            }
+        }
         for (const auto& item : items) {
             cout << item.getitemname() << " " << item.getPrice() << endl;
         }
@@ -235,9 +242,16 @@ public:
     void DescendingPrice() {
         vector<T> items;
         collectItemsinorder(root, items);
-        sort(items.begin(), items.end(), [](const T& a, const T& b) {
-            return a.getPrice() > b.getPrice();
-        });
+        int n = items.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (items[j].getPrice() < items[j + 1].getPrice()) {
+                    T temp = items[j];
+                    items[j] = items[j + 1];
+                    items[j + 1] = temp;
+                }
+            }
+        }
         for (const auto& item : items) {
             cout << item.getitemname() << " " << item.getPrice() << endl;
         }
