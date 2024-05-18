@@ -1,31 +1,14 @@
+//
+// Created by Lenovo on 5/18/2024.
+//
+
+#ifndef UNTITLED_HEAP_H
+#define UNTITLED_HEAP_H
+#include "Item.h"
+
 #include <bits/stdc++.h>
 
 using namespace std;
-
-class Item {
-public:
-    string itemname;
-    string category;
-    int price;
-    Item(string Name="", string Category="", int Price=0) {
-        itemname = Name;
-        category = Category;
-        price = Price;
-    }
-    bool operator<(const Item& t) {
-        return this->itemname < t.itemname;
-    }
-    bool operator>(const Item& t) {
-        return this->itemname > t.itemname;
-    }
-    bool operator==(const Item& t) {
-        return (this->itemname == t.itemname && this->category == t.category && this->price == t.price);
-    }
-    void print() {
-        cout << "Name: " << itemname << ", Category: " << category << ", Price: " << price << '\n';
-    }
-};
-
 class Heap {
 protected:
     vector<Item> heap;
@@ -258,75 +241,4 @@ class maxHeap : public Heap {
         heapifyMaxName(heap, heap.size(), i);
     }
 };
-
-void readItems(istream& input, vector<Item>& items) {
-    string name, category, priceStr;
-    int price;
-    while (getline(input, name)) {
-        getline(input, category);
-        getline(input, priceStr);
-        if (!name.empty() && !category.empty() && !priceStr.empty()) {
-            stringstream ss(priceStr);
-            ss >> price;
-            items.push_back(Item(name, category, price));
-        }
-    }
-}
-
-void print_heap(vector<Item>& heap) {
-    for (Item item : heap) {
-        cout << item.itemname << endl;
-        cout << item.category << endl;
-        cout << item.price << endl;
-    }
-}
-
-int main() {
-    vector<Item> heap;
-    ifstream input("items.txt"); // Open the file
-    if (!input.is_open()) {
-        cout << "Failed to open the file." << endl;
-        return 1;
-    }
-
-    readItems(input, heap);
-    minHeap minHeapName, minHeapPrice;
-    for (auto i : heap) {
-        minHeapName.insertName(i);
-    }
-    minHeapName.print_heap();
-    cout << "------------------------------------------------------------" << endl;
-    minHeapName.heapSortMinName();
-    minHeapName.print_heap();
-    cout << "------------------------------------------------------------" << endl;
-    minHeapName.heapSortMaxName();
-    minHeapName.print_heap();
-    cout << "------------------------------------------------------------" << endl;
-
-    for (auto i : heap) {
-        minHeapPrice.insertPrice(i);
-    }
-    minHeapPrice.print_heap();
-    cout << "------------------------------------------------------------" << endl;
-    minHeapPrice.heapSortMaxPrice();
-    minHeapPrice.print_heap();
-    cout << "------------------------------------------------------------" << endl;
-    minHeapPrice.heapSortMinPrice();
-    minHeapPrice.print_heap();
-    cout << "------------------------------------------------------------" << endl;
-
-    maxHeap maxHeapName, maxHeapPrice;
-    for (auto i : heap) {
-        maxHeapPrice.insertPrice(i);
-    }
-    maxHeapPrice.print_heap();
-    cout << "------------------------------------------------------------" << endl;
-    maxHeapPrice.heapSortMaxPrice();
-    maxHeapPrice.print_heap();
-    cout << "------------------------------------------------------------" << endl;
-    maxHeapPrice.heapSortMinPrice();
-    maxHeapPrice.print_heap();
-    cout << "------------------------------------------------------------" << endl;
-
-    return 0;
-}
+#endif //UNTITLED_HEAP_H
