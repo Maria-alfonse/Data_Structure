@@ -17,13 +17,14 @@ public:
         category = Category;
         price = Price;
     }
-    bool operator<(const Item& t) {
+    bool operator<(const Item& t) const {
         return this->itemname < t.itemname;
     }
-    bool operator>(const Item& t) {
+
+    bool operator>(const Item& t) const {
         return this->itemname > t.itemname;
     }
-    bool operator==(const Item& t) {
+    bool operator==(const Item& t) const {
         return (this->itemname == t.itemname && this->category == t.category && this->price == t.price);
     }
     void print() {
@@ -36,7 +37,6 @@ public:
         return price;
     }
 };
-
 
 
 #endif //UNTITLED_ITEM_H
