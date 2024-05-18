@@ -4,11 +4,18 @@
 
 #ifndef UNTITLED_BST_H
 #define UNTITLED_BST_H
-#include "Item.h"
-
-#include <bits/stdc++.h>
+#include "Items.h"
+#include <vector>
+#include <iostream>
 
 using namespace std;
+bool compareByName(Item& i1, Item& i2) {
+    return i1.itemname > i2.itemname;
+}
+bool compareByPrice(Item& i1, Item& i2) {
+    return i1.price > i2.price;
+}
+
 template<class T>
 class BST_Node{
 public:
@@ -33,7 +40,6 @@ class BST{
 protected:
     BST_Node<T>* rootname;
     BST_Node<T>* rootprice;
-    vector<T>list;
 public:
     BST(){
         rootname = NULL;
@@ -53,7 +59,7 @@ public:
 
 
     void add_item(T& item){
-        list.push_back(item);
+
         // Add item based on name
         BST_Node<T>* now = rootname, *prev = NULL;
         while(now != NULL){
@@ -121,40 +127,160 @@ public:
     void Descending_Name() {
         Descending_Order(rootname);
     }
+
     void Remove_item(T& r) {
-        auto it = find(list.begin(), list.end(), r);
-        if (it != list.end()) {
-            list.erase(it);
-        }
 
         //Search for Name tree
         BST_Node<T> *now = rootname;
         BST_Node<T> *parent = NULL;
 
-        while (now != NULL) {
-            if (now->value == r) {
-                // Item found, perform removal
-                //...
-                break; // Exit loop once removal is done
-            } else if (compareByName(r, now->value)) {
+        while (now != NULL && !(now->value == r)) {
+            parent = now;
+            if (compareByName(r, now->value)) {
                 now = now->right;
-            } else {
+
+            }else {
                 now = now->left;
             }
+
         }
+
         //if not found
         if (now == NULL) {
             cout << "Item not found\n";
             return;
         }
-        //...
+
+        //case#1 no children to the node
+        if (now->right == NULL && now->left == NULL) {
+            if (parent == NULL) { //if now is the root
+                rootname = NULL;
+            } else if (parent->left == now) {
+                parent->left = NULL;
+            } else {
+                parent->right = NULL;
+            }
+            delete now;
+
+            return;
+        }
+
+        //cas2 one child
+        if (now->right != NULL && now->left == NULL) {
+            if (parent == NULL) {
+                rootname = now->right;
+            } else if (parent->left == now) {
+                parent->left = now->right;
+            } else {
+                parent->right = now->right;
+            }
+            delete now;
+            return;
+        } else if (now->left != NULL && now->right == NULL) {
+            if (parent == NULL) {
+                rootname = now->left;
+            } else if (parent->left == now) {
+                parent->left = now->left;
+            } else {
+                parent->right = now->left;
+            }
+            delete now;
+            return;
+        }
+
+        //case3 two children
+        //find the min item in the right subtree
+        BST_Node<T> *minitem = now->right;
+        BST_Node<T> *miniParent = now;
+        while (minitem->left != NULL) {
+            miniParent = minitem;
+            minitem = minitem->left;
+        }
+
+        now->value = minitem->value;
+
+        if (miniParent->left == minitem) {
+            miniParent->left = minitem->right;
+        } else {
+            miniParent->right = minitem->right;
+        }
+        delete minitem;
+
+
+
+        //Search for Price tree
+        now = rootprice;
+        parent = NULL;
+
+        while (now->value != r && now != NULL) {
+            parent = now;
+            if (compareByPrice(r, now->value)) {
+                now = now->right;
+
+            } else {
+                now = now->left;
+            }
+
+        }
+
+
+        //case#1 no children to the node
+        if (now->right == NULL && now->left == NULL) {
+            if (parent == NULL) { //if now is the root
+                rootname = NULL;
+            } else if (parent->left == now) {
+                parent->left = NULL;
+            } else {
+                parent->right = NULL;
+            }
+            delete now;
+
+            return;
+        }
+
+        //cas2 one child
+        if (now->right != NULL && now->left == NULL) {
+            if (parent == NULL) {
+                rootprice = now->right;
+            } else if (parent->left == now) {
+                parent->left = now->right;
+            } else {
+                parent->right = now->right;
+            }
+            delete now;
+            return;
+        } else if (now->left != NULL && now->right == NULL) {
+            if (parent == NULL) {
+                rootprice = now->left;
+            } else if (parent->left == now) {
+                parent->left = now->left;
+            } else {
+                parent->right = now->left;
+            }
+            delete now;
+            return;
+        }
+
+
+        //case3 two children
+        //find the min item in the right subtree
+        minitem = now->right;
+        miniParent = now;
+        while (minitem->left != NULL) {
+            miniParent = minitem;
+            minitem = minitem->left;
+        }
+
+        now->value = minitem->value;
+
+        if (miniParent->left == minitem) {
+            miniParent->left = minitem->right;
+        } else {
+            miniParent->right = minitem->right;
+        }
+        delete minitem;
     }
 
-    void Display_Normally(){
-        for(auto i : list){
-            i.print();
-        }
-    };
 };
 
 #endif //UNTITLED_BST_H
