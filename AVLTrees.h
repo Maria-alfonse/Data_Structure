@@ -6,32 +6,7 @@
 #include <vector>
 #include <algorithm>
 #include <fstream>
-#include "Item.h"
-
-using namespace std;
-
-class item {
-private:
-    string itemname;
-    string category;
-    int price;
-
-public:
-    item(string name, string cat, int pr) : itemname(name), category(cat), price(pr) {}
-
-    string getitemname() const {
-        return itemname;
-    }
-    int getPrice() const {
-        return price;
-    }
-    bool operator<(const Item& other) const {
-        return itemname < other.itemname;
-    }
-    bool operator>(const Item& other) const {
-        return itemname > other.itemname;
-    }
-};
+#include "Items.h"
 template<typename T>
 class AVLTreeNode {
 public:
@@ -197,7 +172,7 @@ private:
             reverseorder(root->left);
         }
     }
-    //puts them in vector
+    //puts them in array
     void collectItemsinorder(AVLTreeNode<T>* root, vector<T>& items) {
         if (root != nullptr) {
             collectItemsinorder(root->left, items);
@@ -258,22 +233,4 @@ public:
         }
     }
 };
-
-template<class T>
-void readItems(istream& input, AVLTree<T>& tree) {
-    int numItems;
-    input >> numItems;
-
-    for (int i = 0; i < numItems; ++i) {
-        string itemname, category;
-        int price;
-
-        input.ignore();
-        getline(input, itemname);
-        getline(input, category);
-        input >> price;
-
-        tree.insert(Item(itemname, category, price));
-    }
-}
 #endif //CLIONPROJECTS_AVLTREES_H
