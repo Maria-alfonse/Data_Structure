@@ -1,8 +1,5 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <fstream>
-#include <sstream>
+#include <bits/stdc++.h>
+
 using namespace std;
 
 class Item {
@@ -10,49 +7,30 @@ public:
     string itemname;
     string category;
     int price;
-    Item(string Name="", string Category="", int Price=0){
+    Item(string Name="", string Category="", int Price=0) {
         itemname = Name;
         category = Category;
         price = Price;
     }
-    bool operator<(const Item& t){
+    bool operator<(const Item& t) {
         return this->itemname < t.itemname;
     }
-    bool operator==(const Item& t){
+    bool operator>(const Item& t) {
+        return this->itemname > t.itemname;
+    }
+    bool operator==(const Item& t) {
         return (this->itemname == t.itemname && this->category == t.category && this->price == t.price);
     }
-    void print (){
-        cout<<"Name: "<<itemname<<", Category: "<<category<<", Price: "<<price<<'\n';
+    void print() {
+        cout << "Name: " << itemname << ", Category: " << category << ", Price: " << price << '\n';
+    }
+    bool compareByName(Item& i1, Item& i2) {
+        return i1.itemname > i2.itemname;
+    }
+    bool compareByPrice(Item& i1, Item& i2) {
+        return i1.price > i2.price;
     }
 };
-bool compareByName(Item& i1, Item& i2) {
-    return i1.itemname > i2.itemname;
-}
-bool compareByPrice(Item& i1, Item& i2) {
-    return i1.price > i2.price;
-}
-
-
-void printItemsList(vector<Item>& items) {
-    for (auto& item : items) {
-        item.print();
-    }
-}
-
-void readItems(istream& input, vector<Item>& items) {
-    string name, category, priceStr;
-    int price;
-    while (getline(input, name)) {
-        getline(input, category);
-        getline(input, priceStr);
-        if (!name.empty() && !category.empty() && !priceStr.empty()) {
-            stringstream ss(priceStr);
-            ss >> price;
-            items.push_back(Item(name, category, price));
-        }
-    }
-}
-
 template<class T>
 class BST_Node{
 public:
@@ -201,152 +179,311 @@ public:
     };
 };
 
+class Heap {
+protected:
+    vector<Item> heap;
+public:
+    void insert(Item item) {
+        heap.push_back(item);
+    }
 
-void heapifyMin(vector<Item>& arr, int size, int index) {
-    int smallest = index;
-    int left = 2 * index + 1;
-    int right = 2 * index + 2;
+    void pop() {
+        heap.pop_back();
+    }
 
-    if (left < size && arr[left].price > arr[smallest].price)
-        smallest = left;
+    void print_heap() {
+        for (Item item : heap) {
+            cout << item.itemname << endl;
+            cout << item.category << endl;
+            cout << item.price << endl;
+        }
+    }
 
-    if (right < size && arr[right].price > arr[smallest].price)
-        smallest = right;
+    int size() {
+        return heap.size();
+    }
 
-    if (smallest != index) {
-        swap(arr[index], arr[smallest]);
-        heapifyMin(arr, size, smallest);
+    bool empty() {
+        return size() == 0;
+    }
+
+    virtual void heapifyDown_price(int i) = 0;
+    virtual void heapifyDown_name(int i) = 0;
+    virtual void heapifyUp_price(int i) = 0;
+    virtual void heapifyUp_name(int i) = 0;
+
+    void insertPrice(Item item) {
+        heap.push_back(item);
+        int index = size() - 1;
+        heapifyUp_price(index);
+    }
+
+    void insertName(Item item) {
+        heap.push_back(item);
+        int index = size() - 1;
+        heapifyUp_name(index);
+    }
+
+    void pop_name() {
+        if (size() == 0)
+            cout << "Empty heap";
+        else {
+            heap[0] = heap.back();
+            heap.pop_back();
+            heapifyDown_name(0);
+        }
+    }
+
+    void pop_price() {
+        if (size() == 0)
+            cout << "Empty heap";
+        else {
+            heap[0] = heap.back();
+            heap.pop_back();
+            heapifyDown_price(0);
+        }
+    }
+
+    void heapifyMinPrice(vector<Item>& arr, int size, int index) {
+        int smallest = index;
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
+
+        if (left < size && arr[left].price < arr[smallest].price)
+            smallest = left;
+
+        if (right < size && arr[right].price < arr[smallest].price)
+            smallest = right;
+
+        if (smallest != index) {
+            swap(arr[index], arr[smallest]);
+            heapifyMinPrice(arr, size, smallest);
+        }
+    }
+
+    void heapifyMinName(vector<Item>& arr, int size, int index) {
+        int smallest = index;
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
+
+        if (left < size && arr[left].itemname < arr[smallest].itemname)
+            smallest = left;
+
+        if (right < size && arr[right].itemname < arr[smallest].itemname)
+            smallest = right;
+
+        if (smallest != index) {
+            swap(arr[index], arr[smallest]);
+            heapifyMinName(arr, size, smallest);
+        }
+    }
+
+    void heapifyMaxPrice(vector<Item>& arr, int size, int index) {
+        int largest = index;
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
+
+        if (left < size && arr[left].price > arr[largest].price)
+            largest = left;
+
+        if (right < size && arr[right].price > arr[largest].price)
+            largest = right;
+
+        if (largest != index) {
+            swap(arr[index], arr[largest]);
+            heapifyMaxPrice(arr, size, largest);
+        }
+    }
+
+    void heapifyMaxName(vector<Item>& arr, int size, int index) {
+        int largest = index;
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
+
+        if (left < size && arr[left].itemname > arr[largest].itemname)
+            largest = left;
+
+        if (right < size && arr[right].itemname > arr[largest].itemname)
+            largest = right;
+
+        if (largest != index) {
+            swap(arr[index], arr[largest]);
+            heapifyMaxName(arr, size, largest);
+        }
+    }
+
+    // Function to heap sort items by price in descending order
+    void heapSortMaxPrice() {
+        int n = heap.size();
+
+        for (int i = n / 2 - 1; i >= 0; i--)
+            heapifyMaxPrice(heap, n, i);
+        for (int i = n - 1; i > 0; i--) {
+            swap(heap[0], heap[i]);
+            heapifyMaxPrice(heap, i, 0);
+        }
+    }
+
+    void heapSortMaxName() {
+        int n = heap.size();
+
+        for (int i = n / 2 - 1; i >= 0; i--)
+            heapifyMaxName(heap, n, i);
+        for (int i = n - 1; i > 0; i--) {
+            swap(heap[0], heap[i]);
+            heapifyMaxName(heap, i, 0);
+        }
+    }
+
+    void heapSortMinPrice() {
+        int n = heap.size();
+
+        for (int i = n / 2 - 1; i >= 0; i--)
+            heapifyMinPrice(heap, n, i);
+        for (int i = n - 1; i > 0; i--) {
+            swap(heap[0], heap[i]);
+            heapifyMinPrice(heap, i, 0);
+        }
+    }
+
+    void heapSortMinName() {
+        int n = heap.size();
+
+        for (int i = n / 2 - 1; i >= 0; i--)
+            heapifyMinName(heap, n, i);
+        for (int i = n - 1; i > 0; i--) {
+            swap(heap[0], heap[i]);
+            heapifyMinName(heap, i, 0);
+        }
+    }
+};
+
+class minHeap : public Heap {
+    void heapifyDown_price(int i) override {
+        heapifyMinPrice(heap, heap.size(), i);
+    }
+
+    void heapifyDown_name(int i) override {
+        heapifyMinName(heap, heap.size(), i);
+    }
+
+    void heapifyUp_price(int i) override {
+        if (i && heap[(i - 1) / 2].price > heap[i].price) {
+            swap(heap[i], heap[(i - 1) / 2]);
+            heapifyUp_price((i - 1) / 2);
+        }
+    }
+
+    void heapifyUp_name(int i) override {
+        if (i && heap[(i - 1) / 2] > heap[i]) {
+            swap(heap[i], heap[(i - 1) / 2]);
+            heapifyUp_name((i - 1) / 2);
+        }
+    }
+};
+
+class maxHeap : public Heap {
+    void heapifyUp_price(int i) override {
+        int parent = (i - 1) / 2;
+        if (parent >= 0) {
+            if (heap[i].price > heap[parent].price) {
+                swap(heap[i], heap[parent]);
+                heapifyUp_price(parent);
+            }
+        }
+    }
+
+    void heapifyUp_name(int i) override {
+        int parent = (i - 1) / 2;
+        if (parent >= 0) {
+            if (heap[i].itemname > heap[parent].itemname) {
+                swap(heap[i], heap[parent]);
+                heapifyUp_name(parent);
+            }
+        }
+    }
+
+    void heapifyDown_price(int i) override {
+        heapifyMaxPrice(heap, heap.size(), i);
+    }
+
+    void heapifyDown_name(int i) override {
+        heapifyMaxName(heap, heap.size(), i);
+    }
+};
+
+void readItems(istream& input, vector<Item>& items) {
+    string name, category, priceStr;
+    int price;
+    while (getline(input, name)) {
+        getline(input, category);
+        getline(input, priceStr);
+        if (!name.empty() && !category.empty() && !priceStr.empty()) {
+            stringstream ss(priceStr);
+            ss >> price;
+            items.push_back(Item(name, category, price));
+        }
     }
 }
 
-// Function to heap sort items by price in ascending order
-void heapSortMin(vector<Item>& arr) {
-    int n = arr.size();
-
-    for (int i = n / 2 - 1; i >= 0; i--)
-        heapifyMin(arr, n, i);
-    for (int i = n - 1; i > 0; i--) {
-        swap(arr[0], arr[i]);
-        heapifyMin(arr, i, 0);
+void print_heap(vector<Item>& heap) {
+    for (Item item : heap) {
+        cout << item.itemname << endl;
+        cout << item.category << endl;
+        cout << item.price << endl;
     }
 }
 
-// Function to heapify for max heap based on item price
-void heapifyMax(vector<Item>& arr, int size, int index) {
-    int largest = index;
-    int left = 2 * index + 1;
-    int right = 2 * index + 2;
-
-    if (left < size && arr[left].price < arr[largest].price)
-        largest = left;
-
-    if (right < size && arr[right].price < arr[largest].price)
-        largest = right;
-
-    if (largest != index) {
-        swap(arr[index], arr[largest]);
-        heapifyMax(arr, size, largest);
-    }
+void showMenu() {
+    cout << "1. Display the item data normally" << endl;
+    cout << "2. Display all the items sorted by their name ascending" << endl;
+    cout << "3. Display all the items sorted by their name descending" << endl;
+    cout << "4. Display all the items sorted by their prices ascending" << endl;
+    cout << "5. Display all the items sorted by their prices descending" << endl;
+    cout << "0. Exit" << endl;
+    cout << "Please enter your choice: ";
 }
-
-// Function to heap sort items by price in descending order
-void heapSortMax(vector<Item>& arr) {
-    int n = arr.size();
-
-    for (int i = n / 2 - 1; i >= 0; i--)
-        heapifyMax(arr, n, i);
-    for (int i = n - 1; i > 0; i--) {
-        swap(arr[0], arr[i]);
-        heapifyMax(arr, i, 0);
-    }
-}
-
-// Function to sort items alphabetically by name in ascending order
-void sortByNameAscending(vector<Item>& arr) {
-    sort(arr.begin(), arr.end(), [](const Item& a, const Item& b) {
-        return a.itemname < b.itemname;
-    });
-}
-
-// Function to sort items alphabetically by name in descending order
-void sortByNameDescending(vector<Item>& arr) {
-    sort(arr.begin(), arr.end(), [](const Item& a, const Item& b) {
-        return a.itemname > b.itemname;
-    });
-}
-
-// Function to print items
-void printItems(const vector<Item>& items) {
-    for (const auto& item : items) {
-        cout << "Name: " << item.itemname << ", category: " << item.category << ", price: EGP" << item.price << endl;
-    }
-}
-
 
 int main() {
-    vector<Item> items;
-    ifstream inputFile("items.txt");
-    if (inputFile.is_open()) {
-        readItems(inputFile, items);
-        inputFile.close();
-    } else {
-        cout << "Unable to open file." << endl;
+    vector<Item> heap;
+    ifstream input("items.txt"); // Open the file
+    if (!input.is_open()) {
+        cout << "Failed to open the file." << endl;
         return 1;
     }
 
-    cout << "Items before sorting:" << endl;
-    printItems(items);
-    cout<<"-------------------------------------------\n";
+    readItems(input, heap);
+    cout<<"1-Binary Search Tree (BST)"<<endl;
+    cout<<"2-Heaps"<<endl;
+    cout<<"3-AVL Trees"<<endl;
+    cout<<"please enter the numbeer of the data structure you want:";
+    int ans;
+    cin>>ans;
+    if(ans==1){
 
-    // Sorting items by price in ascending order
-    heapSortMin(items);
-    cout << "\nItems after sorting by price (ascending order - Min Heap):" << endl;
-    printItems(items);
-    cout<<"-------------------------------------------\n";
-
-    // Sorting items by price in descending order
-    heapSortMax(items);
-    cout << "\nItems after sorting by price (descending order - Max Heap):" << endl;
-    printItems(items);
-    cout<<"-------------------------------------------\n";
-
-    // Sorting items by name in ascending order
-    sortByNameAscending(items);
-    cout << "\nItems after sorting by name (ascending order - Min Heap):" << endl;
-    printItems(items);
-    cout<<"-------------------------------------------\n";
-
-    // Sorting items by name in descending order
-    sortByNameDescending(items);
-    cout << "\nItems after sorting by name (descending order - Max Heap):" << endl;
-    printItems(items);
-    cout<<"-------------------------------------------\n";
-
-
-    //name must be upercase
-    BST<Item>tree;
-    for(auto i: items){
-        tree.add_item(i);
     }
-    Item c = items[1];
-    tree.Remove_item(c);
+    if(ans==2){
+        int choice;
+        do{
+            showMenu();
+            cin>>choice;
+            if(choice==1){
 
+            }
+            if(choice==2){
 
-    cout<<"Sorted by their name ascending\n";
-    tree.Ascending_Name();
-    cout<<"-------------------------------------------\n";
+            }
+            if(choice==3){
 
-    cout<<"Sorted by their price ascending\n";
-    tree.Ascending_Price();
-    cout<<"-------------------------------------------\n";
+            }
+            if(choice ==4){
 
-    cout<<"Sorted by their name descending\n";
-    tree.Descending_Name();
-    cout<<"-------------------------------------------\n";
+            }
+            if(choice==5){
 
-    cout<<"Sorted by their price descending\n";
-    tree.Descending_Price();
-    cout<<"-------------------------------------------\n";
+            }
+        } while (choice!=0);
+    }
 
     return 0;
 }
