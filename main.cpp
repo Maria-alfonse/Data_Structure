@@ -71,6 +71,7 @@ int main() {
                 cout<<"\nEnter Item price: ";
                 cin>>new_item.price;
                 tree.add_item(new_item);
+                items.push_back(new_item);
             }else if(c==2){
                 Item delete_item ;
                 cout<<"Enter Item name: ";
@@ -80,6 +81,11 @@ int main() {
                 cout<<"\nEnter Item price: ";
                 cin>>delete_item.price;
                 tree.Remove_item(delete_item);
+
+                auto it = std::find(items.begin(), items.end(), delete_item);
+                if (it != items.end()) {
+                    items.erase(it);
+                }
             }else if(c==3) {
                 for(auto i:items){
                     i.print();
