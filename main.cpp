@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include "Items.h"
+#include "Item.h"
 #include "Heap.h"
 #include "AVLTrees.h"
 #include "BST.h"
@@ -40,7 +40,7 @@ void showMenu() {
 
 int main() {
     vector<Item> items;
-    ifstream input("C:\\Users\\hhaym\\Documents\\clionprojects\\Data_Structures\\items.txt"); // Open the file
+    ifstream input("items.txt"); // Open the file
     if (!input.is_open()) {
         cout << "Failed to open the file." << endl;
         return 1;
