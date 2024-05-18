@@ -54,6 +54,48 @@ int main() {
     int ans;
     cin>>ans;
     if(ans==1){
+        BST<Item>tree;
+        for(auto i:items){
+            tree.add_item(i);
+        }
+        bool a = 1;
+        while(a){
+            showMenu();
+            int c; cin>>c;
+            if(c==1){
+                Item new_item ;
+                cout<<"Enter Item name: ";
+                cin>>new_item.itemname;
+                cout<<"\nEnter Item category: ";
+                cin>>new_item.category;
+                cout<<"\nEnter Item price: ";
+                cin>>new_item.price;
+                tree.add_item(new_item);
+            }else if(c==2){
+                Item delete_item ;
+                cout<<"Enter Item name: ";
+                cin>>delete_item.itemname;
+                cout<<"\nEnter Item category: ";
+                cin>>delete_item.category;
+                cout<<"\nEnter Item price: ";
+                cin>>delete_item.price;
+                tree.Remove_item(delete_item);
+            }else if(c==3) {
+                for(auto i:items){
+                    i.print();
+                }
+            }else if(c==4){
+                tree.Ascending_Name();
+            }else if(c==5) {
+                tree.Descending_Name();
+            }else if(c==6){
+                tree.Ascending_Price();
+            }else if(c==7){
+                tree.Descending_Price();
+            }else if(c==0){
+                a = 0;
+            }
+        }
 
     }
     else if (ans == 2) {
