@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include "Item.h"
+#include "Items.h"
 #include "Heap.h"
 #include "AVLTrees.h"
 #include "BST.h"
@@ -40,7 +40,7 @@ void showMenu() {
 
 int main() {
     vector<Item> items;
-    ifstream input("items.txt"); // Open the file
+    ifstream input("C:\\Users\\hhaym\\Documents\\clionprojects\\Data_Structures\\items.txt"); // Open the file
     if (!input.is_open()) {
         cout << "Failed to open the file." << endl;
         return 1;
@@ -172,6 +172,64 @@ int main() {
             }
         } while (choice != 0);
     }
-
+    else{
+        AVLTree<Item>avltree;
+        for(Item& item : items){
+            avltree.insert(item);
+            int choice;
+            do{
+                showMenu();
+                cin>>choice;
+                if(choice==1){
+                    string name, category;
+                    int price;
+                    cout << "Enter item name: ";
+                    cin >> name;
+                    cout << "Enter category: ";
+                    cin >> category;
+                    cout << "Enter price: ";
+                    cin >> price;
+                    Item newItem(name, category, price);
+                    avltree.insert(newItem);
+                }
+                else if(choice==2){
+                    string name, category;
+                    int price;
+                    cout << "Enter item name: ";
+                    cin >> name;
+                    cout << "Enter category: ";
+                    cin >> category;
+                    cout << "Enter price: ";
+                    cin >> price;
+                    avltree.remove(Item(name,category,price));
+                }
+                else if(choice==3){
+                    cout<<"Display Normally:\n";
+                    avltree.displaynormal();
+                    cout<<endl;
+                }
+                else if(choice==4){
+                    cout<<"sort name in ascending order:\n";
+                    avltree.AscendingName();
+                    cout<<endl;
+                }
+                else if(choice==5){
+                    cout<<"sort name in descending order:\n";
+                    avltree.DescendingName();
+                    cout<<endl;
+                }
+                else if(choice==6){
+                    cout<<"sort price in ascending order:\n";
+                    avltree.AscendingPrice();
+                    cout<<endl;
+                }
+                else if(choice==7){
+                    cout<<"sort price in descending order:\n";
+                    avltree.DescendingPrice();
+                    cout<<endl;
+                }
+            } while (choice != 0);
+        }
+    }
     return 0;
 }
