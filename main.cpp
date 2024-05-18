@@ -40,7 +40,7 @@ void showMenu() {
 
 int main() {
     vector<Item> items;
-    ifstream input("D:\\untitled\\items.txt"); // Open the file
+    ifstream input("items.txt"); // Open the file
     if (!input.is_open()) {
         cout << "Failed to open the file." << endl;
         return 1;
