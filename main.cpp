@@ -109,24 +109,24 @@ int main() {
             }
             else if (choice == 4) {
                 cout << "Items sorted by name ascending (MinHeap):" << endl;
-                maxheap.heapSortMaxName();
-                maxheap.print_heap();
-            }
-            else if (choice == 5) {
-                cout << "Items sorted by name descending (MaxHeap):" << endl;
                 minheap.heapSortMinName();
                 minheap.print_heap();
             }
+            else if (choice == 5) {
+                cout << "Items sorted by name descending (MaxHeap):" << endl;
+                maxheap.heapSortMaxName();
+                maxheap.print_heap();
+            }
             else if (choice == 6) {
                 cout << "Items sorted by price ascending (MinHeap):" << endl;
-                maxheap.heapSortMaxPrice();
-                maxheap.print_heap();
+                minheap.heapSortMinPrice();
+                minheap.print_heap();
             }
             else if (choice == 7) {
                 cout << "Items sorted by price descending (MaxHeap):" << endl;
 
-                minheap.heapSortMinPrice();
-                minheap.print_heap();
+                maxheap.heapSortMaxPrice();
+                maxheap.print_heap();
             }
         } while (choice != 0);
     }
