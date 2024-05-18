@@ -79,10 +79,10 @@ public:
         int left = 2 * index + 1;
         int right = 2 * index + 2;
 
-        if (left < size && arr[left].price < arr[smallest].price)
+        if (left < size && arr[left].price > arr[smallest].price)
             smallest = left;
 
-        if (right < size && arr[right].price < arr[smallest].price)
+        if (right < size && arr[right].price > arr[smallest].price)
             smallest = right;
 
         if (smallest != index) {
@@ -96,10 +96,10 @@ public:
         int left = 2 * index + 1;
         int right = 2 * index + 2;
 
-        if (left < size && arr[left].itemname < arr[smallest].itemname)
+        if (left < size && arr[left].itemname > arr[smallest].itemname)
             smallest = left;
 
-        if (right < size && arr[right].itemname < arr[smallest].itemname)
+        if (right < size && arr[right].itemname > arr[smallest].itemname)
             smallest = right;
 
         if (smallest != index) {
@@ -113,10 +113,10 @@ public:
         int left = 2 * index + 1;
         int right = 2 * index + 2;
 
-        if (left < size && arr[left].price > arr[largest].price)
+        if (left < size && arr[left].price < arr[largest].price)
             largest = left;
 
-        if (right < size && arr[right].price > arr[largest].price)
+        if (right < size && arr[right].price < arr[largest].price)
             largest = right;
 
         if (largest != index) {
@@ -130,10 +130,10 @@ public:
         int left = 2 * index + 1;
         int right = 2 * index + 2;
 
-        if (left < size && arr[left].itemname > arr[largest].itemname)
+        if (left < size && arr[left].itemname < arr[largest].itemname)
             largest = left;
 
-        if (right < size && arr[right].itemname > arr[largest].itemname)
+        if (right < size && arr[right].itemname < arr[largest].itemname)
             largest = right;
 
         if (largest != index) {
@@ -241,4 +241,5 @@ class maxHeap : public Heap {
         heapifyMaxName(heap, heap.size(), i);
     }
 };
+
 #endif //UNTITLED_HEAP_H
