@@ -435,11 +435,13 @@ void print_heap(vector<Item>& heap) {
 }
 
 void showMenu() {
-    cout << "1. Display the item data normally" << endl;
-    cout << "2. Display all the items sorted by their name ascending" << endl;
-    cout << "3. Display all the items sorted by their name descending" << endl;
-    cout << "4. Display all the items sorted by their prices ascending" << endl;
-    cout << "5. Display all the items sorted by their prices descending" << endl;
+    cout << "1. Add item data" << endl;
+    cout << "2. remove item data" << endl;
+    cout << "3. Display the item data normally" << endl;
+    cout << "4. Display all the items sorted by their name ascending" << endl;
+    cout << "5. Display all the items sorted by their name descending" << endl;
+    cout << "6. Display all the items sorted by their prices ascending" << endl;
+    cout << "7. Display all the items sorted by their prices descending" << endl;
     cout << "0. Exit" << endl;
     cout << "Please enter your choice: ";
 }
@@ -474,12 +476,18 @@ int main() {
 
             }
             if(choice==3){
-
+                
             }
             if(choice ==4){
 
             }
             if(choice==5){
+
+            }
+            if(choice==6){
+
+            }
+            if(choice==7){
 
             }
         } while (choice!=0);
