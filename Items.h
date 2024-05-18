@@ -29,12 +29,6 @@ public:
     void print() {
         cout << "Name: " << itemname << ", Category: " << category << ", Price: " << price << '\n';
     }
-    bool compareByName(Item& i1, Item& i2) {
-        return i1.itemname > i2.itemname;
-    }
-    bool compareByPrice(Item& i1, Item& i2) {
-        return i1.price > i2.price;
-    }
     string getitemname() const {
         return itemname;
     }
@@ -42,4 +36,7 @@ public:
         return price;
     }
 };
+
+
+
 #endif //UNTITLED_ITEM_H
