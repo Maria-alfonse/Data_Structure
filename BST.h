@@ -4,15 +4,15 @@
 
 #ifndef UNTITLED_BST_H
 #define UNTITLED_BST_H
-#include "Items.h"
+#include "Item.h"
 #include <vector>
 #include <iostream>
 
 using namespace std;
-bool compareByName(Item& i1, Item& i2) {
+bool compareByName(const Item& i1, const Item& i2) {
     return i1.itemname > i2.itemname;
 }
-bool compareByPrice(Item& i1, Item& i2) {
+bool compareByPrice(const Item& i1, const Item& i2) {
     return i1.price > i2.price;
 }
 
@@ -128,15 +128,15 @@ public:
         Descending_Order(rootname);
     }
 
-    void Remove_item(T& r) {
+    BST_Node<T>* removeNode(BST_Node<T>* root,const T& r, bool (*compare)(const Item&, const Item&)) {
 
-        //Search for Name tree
-        BST_Node<T> *now = rootname;
+        //Search in tree
+        BST_Node<T> *now = root;
         BST_Node<T> *parent = NULL;
 
         while (now != NULL && !(now->value == r)) {
             parent = now;
-            if (compareByName(r, now->value)) {
+            if (compare(r, now->value)) {
                 now = now->right;
 
             }else {
@@ -148,13 +148,13 @@ public:
         //if not found
         if (now == NULL) {
             cout << "Item not found\n";
-            return;
+            return root;
         }
 
         //case#1 no children to the node
         if (now->right == NULL && now->left == NULL) {
             if (parent == NULL) { //if now is the root
-                rootname = NULL;
+                root = NULL;
             } else if (parent->left == now) {
                 parent->left = NULL;
             } else {
@@ -162,30 +162,30 @@ public:
             }
             delete now;
 
-            return;
+            return root;
         }
 
         //cas2 one child
         if (now->right != NULL && now->left == NULL) {
             if (parent == NULL) {
-                rootname = now->right;
+                root = now->right;
             } else if (parent->left == now) {
                 parent->left = now->right;
             } else {
                 parent->right = now->right;
             }
             delete now;
-            return;
+            return root;
         } else if (now->left != NULL && now->right == NULL) {
             if (parent == NULL) {
-                rootname = now->left;
+                root = now->left;
             } else if (parent->left == now) {
                 parent->left = now->left;
             } else {
                 parent->right = now->left;
             }
             delete now;
-            return;
+            return root;
         }
 
         //case3 two children
@@ -205,81 +205,13 @@ public:
             miniParent->right = minitem->right;
         }
         delete minitem;
-
-
-
-        //Search for Price tree
-        now = rootprice;
-        parent = NULL;
-
-        while (now->value != r && now != NULL) {
-            parent = now;
-            if (compareByPrice(r, now->value)) {
-                now = now->right;
-
-            } else {
-                now = now->left;
-            }
-
-        }
-
-
-        //case#1 no children to the node
-        if (now->right == NULL && now->left == NULL) {
-            if (parent == NULL) { //if now is the root
-                rootname = NULL;
-            } else if (parent->left == now) {
-                parent->left = NULL;
-            } else {
-                parent->right = NULL;
-            }
-            delete now;
-
-            return;
-        }
-
-        //cas2 one child
-        if (now->right != NULL && now->left == NULL) {
-            if (parent == NULL) {
-                rootprice = now->right;
-            } else if (parent->left == now) {
-                parent->left = now->right;
-            } else {
-                parent->right = now->right;
-            }
-            delete now;
-            return;
-        } else if (now->left != NULL && now->right == NULL) {
-            if (parent == NULL) {
-                rootprice = now->left;
-            } else if (parent->left == now) {
-                parent->left = now->left;
-            } else {
-                parent->right = now->left;
-            }
-            delete now;
-            return;
-        }
-
-
-        //case3 two children
-        //find the min item in the right subtree
-        minitem = now->right;
-        miniParent = now;
-        while (minitem->left != NULL) {
-            miniParent = minitem;
-            minitem = minitem->left;
-        }
-
-        now->value = minitem->value;
-
-        if (miniParent->left == minitem) {
-            miniParent->left = minitem->right;
-        } else {
-            miniParent->right = minitem->right;
-        }
-        delete minitem;
+        return root;
     }
+    void Remove_item(const Item& item) {
+        rootname = removeNode(rootname, item, compareByName);
+        rootprice = removeNode(rootprice, item, compareByPrice);
+    }
+
 
 };
 
